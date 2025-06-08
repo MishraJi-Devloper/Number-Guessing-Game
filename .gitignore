@@ -1,0 +1,30 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+env/
+venv/
+ENV/
+
+# VSCode and IDE settings
+.VSCodeCounter/
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+
+# Databases
+*.db
+*.sqlite3
+
+# Flask instance folder
+instance/
+
+# Log files
+*.log
+
+# Do NOT ignore requirements.txt!
