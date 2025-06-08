@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Number Guessing Game</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Edu+SA+Hand:wght@700&display=swap" rel="stylesheet" />
+</head>
+<style>
+    /* Reset and base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: linear-gradient(135deg, #1a1a1a, #111);
+  font-family: "Edu SA Hand", cursive;
+  color: #eee;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+}
+
+header .name {
+  font-size: 3rem;
+  font-weight: 700;
+  background: rgba(241, 197, 197, 0.3);
+  padding: 0.6rem 1.5rem;
+  border-radius: 15px;
+  margin-bottom: 2rem;
+  text-align: center;
+  width: fit-content;
+  user-select: none;
+  box-shadow: 0 4px 15px rgba(241, 197, 197, 0.5);
+}
+
+main {
+  width: 100%;
+  max-width: 400px;
+}
+
+.card {
+  background: #222;
+  border-radius: 15px;
+  padding: 2rem 2.5rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+h1 {
+  font-size: 2.4rem;
+  margin-bottom: 1rem;
+  color: #ffdd57;
+  text-shadow: 0 0 10px #ffdd57;
+}
+
+.instructions {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  color: #bbb;
+  font-weight: 500;
+}
+
+input[type="number"] {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 1.2rem;
+  border-radius: 10px;
+  border: none;
+  margin-bottom: 1rem;
+  outline: none;
+  box-shadow: inset 0 0 5px #555;
+  transition: box-shadow 0.3s ease;
+  background-color: #333;
+  color: #eee;
+}
+
+input[type="number"]:focus {
+  box-shadow: 0 0 10px #ffdd57;
+  background-color: #2a2a2a;
+}
+
+button {
+  cursor: pointer;
+  padding: 12px 25px;
+  font-size: 1.1rem;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(45deg, #ffdd57, #f9a825);
+  color: #222;
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(255, 221, 87, 0.7);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  user-select: none;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+button:hover:not(:disabled) {
+  background: linear-gradient(45deg, #f9a825, #ffdd57);
+  box-shadow: 0 6px 20px rgba(249, 168, 37, 0.9);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.message {
+  font-size: 1.2rem;
+  min-height: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  user-select: none;
+}
+
+.restart {
+  background: linear-gradient(45deg, #4caf50, #388e3c);
+  color: white;
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.7);
+}
+
+.restart:hover {
+  background: linear-gradient(45deg, #388e3c, #4caf50);
+  box-shadow: 0 6px 20px rgba(56, 142, 60, 0.9);
+}
+
+/* Modal styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #222;
+  color: #ffdd57;
+  margin: auto;
+  padding: 2rem 2.5rem;
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+  text-align: center;
+  position: relative;
+  min-width: 280px;
+  max-width: 90vw;
+  animation: popIn 0.3s;
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal-content h2 {
+  margin-bottom: 1rem;
+  font-size: 2rem;
+  color: #ffdd57;
+}
+
+.modal-content p {
+  margin-bottom: 1.5rem;
+  color: #fff;
+}
+
+.modal-content button {
+  background: linear-gradient(45deg, #ffdd57, #f9a825);
+  color: #222;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 30px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(255, 221, 87, 0.7);
+  transition: background 0.3s;
+}
+
+.modal-content button:hover {
+  background: linear-gradient(45deg, #f9a825, #ffdd57);
+}
+
+.modal-content.modern-hurrah {
+  background: #222;
+  color: #ffdd57;
+  margin: auto;
+  padding: 2.5rem 2.5rem 2rem 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 0 40px 10px #ffdd57, 0 8px 32px rgba(0, 0, 0, 0.8);
+  text-align: center;
+  position: relative;
+  min-width: 220px;
+  max-width: 90vw;
+  animation: hurrahPop 0.5s cubic-bezier(.68,-0.55,.27,1.55);
+  font-size: 2rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-shadow: 0 0 18px #ffdd57, 0 0 8px #fff;
+}
+
+@keyframes hurrahPop {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+  80% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.modal-content.modern-hurrah h2 {
+  margin: 0;
+  color: #ffdd57;
+  font-size: 2.2rem;
+  text-shadow: 0 0 18px #ffdd57, 0 0 8px #fff;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 18px;
+  font-size: 2rem;
+  color: #ffdd57;
+  cursor: pointer;
+  font-weight: bold;
+  transition: color 0.2s;
+  z-index: 10;
+}
+
+.close:hover {
+  color: #fff;
+}
+
+</style>
+<body>
+    <header>
+        <div class="name">Number Guessing Game</div>
+    </header>
+    <main>
+        <div class="card">
+            <h1>Guess The Number</h1>
+            <div class="instructions">Enter a number between 1 and 100</div>
+            <input type="number" id="guessInput" min="1" max="100" placeholder="Your guess..." />
+            <button id="guessBtn">Guess</button>
+            <div class="message" id="message"></div>
+            <button id="restartBtn" class="restart" style="display:none;">Restart Game</button>
+        </div>
+        <!-- Modal Popup -->
+        <div id="hurrahModal" class="modal" style="display:none;">
+            <div class="modal-content modern-hurrah">
+                <span class="close" id="closeModal">&times;</span>
+                <h2>Hurrah! 🎉</h2>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const guessInput = document.getElementById('guessInput');
+        const guessBtn = document.getElementById('guessBtn');
+        const message = document.getElementById('message');
+        const restartBtn = document.getElementById('restartBtn');
+        const hurrahModal = document.getElementById('hurrahModal');
+        const closeModal = document.getElementById('closeModal');
+        let hurrahTimeout;
+
+        function showHurrahModal() {
+            hurrahModal.style.display = 'flex';
+            // Auto-close after 1.5s
+            hurrahTimeout = setTimeout(hideHurrahModal, 1500);
+        }
+        function hideHurrahModal() {
+            hurrahModal.style.display = 'none';
+            clearTimeout(hurrahTimeout);
+        }
+
+        function submitGuess() {
+            const guess = guessInput.value;
+            if (!guess) {
+                message.textContent = 'Please enter a number!';
+                return;
+            }
+
+            fetch('/guess', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ guess: guess })
+            })
+            .then(async res => {
+                const data = await res.json();
+                message.textContent = data.message;
+
+                if (res.ok) {
+                    if (data.message.includes('Correct')) {
+                        guessBtn.disabled = true;
+                        restartBtn.style.display = 'inline-block';
+                        showHurrahModal();
+                    } else {
+                        guessBtn.disabled = false;
+                    }
+                } else {
+                    guessBtn.disabled = false;
+                }
+                guessInput.value = '';
+                guessInput.focus();
+            })
+            .catch(() => {
+                message.textContent = 'Error communicating with server.';
+                guessBtn.disabled = false;
+            });
+        }
+
+        guessBtn.addEventListener('click', submitGuess);
+
+        // Allow Enter key to submit guess
+        guessInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                submitGuess();
+            }
+        });
+
+        restartBtn.addEventListener('click', () => {
+            guessBtn.disabled = false;
+            restartBtn.style.display = 'none';
+            message.textContent = '';
+            guessInput.value = '';
+            guessInput.focus();
+        });
+
+        closeModal.addEventListener('click', hideHurrahModal);
+
+        window.onclick = function(event) {
+            if (event.target == hurrahModal) {
+                hideHurrahModal();
+            }
+        }
+    </script>
+</body>
+</html>
